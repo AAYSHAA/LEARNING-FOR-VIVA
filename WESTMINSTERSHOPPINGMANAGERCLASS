@@ -1,0 +1,708 @@
+import javax.swing.*;
+/*This package provides classes for creating graphical user interfaces (GUIs) in Java.
+It includes classes for creating windows, buttons, text fields, and other GUI components.*/
+
+import java.io.Serializable;
+/*This interface is used to mark classes that can be serialized.
+Serialization is the process of converting an object into a stream of bytes so that it can be stored in a file or sent over a network.
+Classes that implement the Serializable interface can be written to and read from an output/input stream.*/
+
+import java.io.ObjectInputStream;
+/*This class is used to read objects from an input stream.
+It reads the serialized objects from the stream and reconstructs them into their original form.*/
+
+import java.io.ObjectOutputStream;
+/*This class is used to write objects to an output stream.
+It writes the serialized objects to the stream.*/
+
+import java.io.FileInputStream;
+/*This class is used to read data from a file as a stream of bytes.*/
+
+import java.io.FileOutputStream;
+/*This class is used to write data to a file as a stream of bytes.*/
+
+import java.io.IOException;
+/*This class is used to handle input/output exceptions that may occur during the execution of a program.
+An IOException is thrown when an error occurs during an input/output operation,
+such as reading or writing to a file, a stream, a network connection, or a database.*/
+
+import java.util.List;
+/*This interface represents an ordered collection of elements,
+where each element is identified by an index.
+The List interface provides methods for adding, removing, and accessing elements in the list.*/
+
+import java.util.ArrayList;
+/*This class implements the List interface and provides a resizable array implementation of the List interface.
+It is similar to an array, but its size can be dynamically changed.*/
+
+import java.util.Iterator;
+/*This interface provides methods for iterating over a collection of elements.
+It allows you to traverse a collection of elements one by one and perform some operation on each element.*/
+
+import java.util.Collections;
+/*This class provides methods for working with collections,
+such as sorting, searching, and shuffling.*/
+
+import java.util.Comparator;
+/*This interface provides methods for comparing two objects.
+It is used to define a custom ordering of objects.*/
+
+import java.util.Scanner;
+/*This class is used to read input from the user or from a file.
+It provides methods for reading different types of data, such as integers, floating-point numbers, and strings.*/
+
+// WestminsterShoppingManager class implementing ShoppingManager interface
+public class WestminsterShoppingManager implements ShoppingManager, Serializable {
+    private static final int MAX_PRODUCTS = 50;
+    // The static keyword is a non-access modifier used for methods and attributes.
+    // Static methods/attributes can be accessed without creating an object of a class.
+
+    public static ArrayList<Product> productList = new ArrayList<>();
+    // This line declares a static ArrayList named productList of type Product.
+    // It will be shared among all instances of the class.
+
+    private boolean exit;
+    //This line declares a boolean variable exit that is used to control the loop in the runShoppingManager method.
+
+
+
+    // Constructor for WestminsterShoppingManager class
+    public WestminsterShoppingManager() {
+       // productList = new ArrayList<>();
+        exit = false;
+    }
+
+    // This is the constructor for WestminsterShoppingManager.
+    // It initializes productList and sets exit to false when an instance of the class is created.
+
+    // Implement methods from ShoppingManager interface
+
+    @Override // ---- > class overrides the addProductToSystem method declared in the ShoppingManager interface.
+    // In Java, when a class implements an interface,
+    // it needs to provide concrete implementations for all the methods declared in that interface.
+    public void addProductToSystem(Product product) {
+        if (productList.size() < MAX_PRODUCTS) {
+            productList.add(product);
+            System.out.println("Product added to the system.");
+        } else {
+            System.out.println("Cannot add more products. Maximum limit reached.");
+        }
+    }
+
+// This block checks if the product list is not full, adds the product, and prints a success message.
+// If the maximum limit is reached, it prints an error message.
+
+
+
+
+//Delete product from the system
+    @Override
+    public void deleteProductFromSystem(String productId) {
+        Iterator<Product> iterator = productList.iterator();
+        while (iterator.hasNext()) {
+            Product product = iterator.next();
+            if (product.getProductId().equals(productId)) {
+                iterator.remove();
+                System.out.println("Product deleted: " + product.getProductName() +
+                        " (ID: " + productId + "). Total products left: " + productList.size());
+                return;
+            }
+        }
+        System.out.println("Product not found with ID: " + productId);
+    }
+/*public void deleteProductFromSystem(String productId) {: Method signature that declares a method named deleteProductFromSystem taking a String parameter productId and returning void.
+
+Iterator<Product> iterator = productList.iterator();: Creates an iterator for the productList. An iterator is used to traverse through the elements of a collection.
+
+while (iterator.hasNext()) {: Initiates a loop that iterates as long as there are more elements in the productList.
+
+Product product = iterator.next();: Retrieves the next product from the productList using the iterator.
+
+if (product.getProductId().equals(productId)) {: Checks if the current product's ID matches the specified productId.
+
+iterator.remove();: If a match is found, the product is removed from the productList using the iterator's remove method.
+
+System.out.println("Product deleted: " + product.getProductName() + " (ID: " + productId + "). Total products left: " + productList.size());:
+Prints a message to the console indicating that the product has been deleted, including the product's name, ID, and the total number of products remaining in the list.
+
+return;: Exits the method after deleting the product.
+
+`} // end of if**: Marks the end of the if statement block.
+
+`} // end of while**: Marks the end of the while loop.
+
+System.out.println("Product not found with ID: " + productId);: If no matching product is found in the loop,
+this line prints a message to the console indicating that a product with the specified ID was not found.
+
+In summary, this method searches for a product with a given ID in the productList and removes it if found.
+It provides feedback to the user through console messages about whether the deletion was successful or if the specified product ID was not found.*/
+
+
+
+    //print all products available in the system
+    @Override  // --- > This is the implementation of the deleteProductFromSystem method required by the ShoppingManager interface.
+              // It deletes a product from the system based on the provided product ID.
+    public void printProductList() {
+        if (productList.isEmpty()) {
+            System.out.println("Product list is empty.");
+            return;
+        }
+
+        try {
+            System.out.printf("%-15s%-20s%-20s%-15s%-15s%-15s\n", "Product ID", "Product Name", "Available Items", "Price", "Type", "Details");
+            System.out.println("-------------------------------------------------------------------------------");
+/*This line uses System.out.printf to format and print a line with specific placeholders.
+
+%s: Represents a string placeholder.
+%-15s: The - flag indicates left-justification, and 15 specifies a field width of 15 characters for a string.
+\n: Represents a newline character.
+Now, let's break down the entire line:
+
+% -15s: This means the first string will be left-justified in a field of 15 characters. This is used for "Product ID".
+% -20s: This means the second string will be left-justified in a field of 20 characters. This is used for "Product Name".
+% -20s: This means the third string will be left-justified in a field of 20 characters. This is used for "Available Items".
+% -15s: This means the fourth string will be left-justified in a field of 15 characters. This is used for "Price".
+% -15s: This means the fifth string will be left-justified in a field of 15 characters. This is used for "Type".
+% -15s: This means the sixth string will be left-justified in a field of 15 characters. This is used for "Details".
+The values provided after the format string ("Product ID", "Product Name", etc.) will replace the corresponding placeholders in the format string.
+The result is a formatted line that aligns the headers of the columns in a tabular structure, making it easier to read and understand.*/
+
+            Collections.sort(productList, Comparator.comparing(Product::getProductId));
+
+            for (Product product : productList) {
+                System.out.printf("%-15s%-20s%-20d%-15.2f%-15s%-15s\n",
+                        product.getProductId(),
+                        product.getProductName(),
+                        product.getAvailableItems(),
+                        product.getPrice(),
+                        (product instanceof Electronics) ? "Electronics" : "Clothing",
+                        //If the product is an instance of Electronics, it returns the string "Electronics".
+                        //If the product is not an instance of Electronics (i.e., it is Clothing or another type), it returns the string "Clothing".
+
+                        (product instanceof Electronics) ? "Brand: " + ((Electronics) product).getBrand() + ", Warranty: " + ((Electronics) product).getWarrantyPeriod() : "Size: " + ((Clothing) product).getSize() + ", Color: " + ((Clothing) product).getColor());
+                //If the product is an instance of Electronics, it returns a string concatenation containing the brand and warranty information.
+                //If the product is not an instance of Electronics (i.e., it is Clothing or another type), it returns a string concatenation containing the size and color information.
+
+
+                /*System.out.printf(: This starts the print formatting process using System.out.
+
+"%-15s%-20s%-20d%-15.2f%-15s%-15s\n",: This is the format string that defines the structure of the output. It consists of multiple format specifiers:
+
+% -15s: Represents a left-justified string with a minimum width of 15 characters.
+% -20s: Represents a left-justified string with a minimum width of 20 characters.
+% -20d: Represents a left-justified integer with a minimum width of 20 characters.
+% -15.2f: Represents a left-justified floating-point number with a minimum width of 15 characters, including two decimal places.
+% -15s: Represents a left-justified string with a minimum width of 15 characters.
+% -15s: Represents a left-justified string with a minimum width of 15 characters.
+\n: Adds a newline character to move to the next line after printing.
+product.getProductId(),: This provides the value for the first format specifier (%-15s), which represents the product ID.
+
+product.getProductName(),: This provides the value for the second format specifier (%-20s), which represents the product name.
+
+product.getAvailableItems(),: This provides the value for the third format specifier (%-20d), which represents the available items (an integer).
+
+product.getPrice(),: This provides the value for the fourth format specifier (%-15.2f), which represents the price (a floating-point number).
+
+(product instanceof Electronics) ? "Electronics" : "Clothing",: This ternary expression determines the product type. If it's an instance of Electronics, it prints "Electronics"; otherwise, it prints "Clothing". This provides the value for the fifth format specifier (%-15s).
+
+(product instanceof Electronics) ? "Brand: " + ((Electronics) product).getBrand() + ", Warranty: " + ((Electronics) product).getWarrantyPeriod() : "Size: " + ((Clothing) product).getSize() + ", Color: " + ((Clothing) product).getColor());: This is another ternary expression that determines the details to be printed based on the product type. If it's an instance of Electronics, it prints the brand and warranty period; otherwise, it prints the size and color. This provides the value for the sixth and seventh format specifiers (%-15s each).
+
+);: Closes the printf method call.
+
+In summary, this line formats and prints information about a product in a tabular structure, aligning each piece of information in its respective column. The format string specifies the width and type of each column, and the actual values are provided for each specifier.*/
+            }
+        } catch (Exception e) {
+            System.out.println("Error printing the product list: " + e.getMessage());
+            /*catch (Exception e): This is the catch clause, which specifies the type of exception that the block can handle. In this case,
+            it catches any exception that is an instance of the Exception class or one of its subclasses.
+            The caught exception is then referred to as e in the block.
+
+System.out.println("Error printing the product list: " + e.getMessage());:
+This is the code that gets executed if an exception of type Exception (or its subclass) is thrown in the corresponding try block.
+It prints an error message to the console.
+
+System.out.println: This is used to print a line to the standard output (console).
+
+"Error printing the product list: " + e.getMessage(): This concatenates the static error message "Error printing the product list:
+" with the specific error message obtained from the exception e using e.getMessage().
+
+e.getMessage(): This method retrieves the error message associated with the exception e.
+The getMessage() method is part of the Throwable class (which Exception extends) and is often overridden in specific exception classes to provide details
+about the exception.
+
+So, in summary, if an exception of type Exception (or its subclass) occurs in the associated try block,
+this catch block will catch it, and it will print a specific error message to the console indicating that there was an error
+while printing the product list, along with details from the exception's message.
+
+*/
+        }
+    }
+
+    //This block uses an iterator to iterate through the product list, finds the product with the specified ID, removes it, and prints a success message.
+    // If the product is not found, it prints an error message.
+
+
+
+
+//Save existing products to file
+    @Override
+    public void saveProductsToFile(String filename) {
+        System.out.println("-------------------------------------------------------------------------------");
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(filename))) {
+            outputStream.writeObject(productList);
+            System.out.println("Products saved to file: " + filename);
+        } catch (IOException e) {
+            System.out.println("Error saving products to file: " + e.getMessage());
+        }
+    }
+/*try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(filename))) {:
+This begins a try block where the actual file-writing operations take place.
+The try-with-resources statement is used here, ensuring that the ObjectOutputStream is closed automatically when the block is exited.
+
+ObjectOutputStream: This class provides a convenient way to serialize Java objects into a binary format.
+
+new ObjectOutputStream(new FileOutputStream(filename)): This part creates an ObjectOutputStream that writes to a file specified by the filename.
+The FileOutputStream is wrapped within the ObjectOutputStream.
+
+outputStream.writeObject(productList);: This line writes the entire productList (which is assumed to be a serializable list of objects) to the file.
+
+System.out.println("Products saved to file: " + filename);: If the write operation is successful,
+this line prints a success message to the console, indicating that the products have been saved to the specified file.
+
+} catch (IOException e) {: This catch block is executed if an IOException occurs during the try block.
+IOException is a broad exception that can be thrown when dealing with file operations.
+
+System.out.println("Error saving products to file: " + e.getMessage());:
+In case of an exception, this line prints an error message to the console,
+including details obtained from the exception's message using e.getMessage().
+
+In summary, this method attempts to save a list of products to a file using serialization.
+If the operation is successful, it prints a success message; otherwise,
+it catches and handles any IOException by printing an error message.*/
+
+
+    @Override
+    public List<Product> loadProductsFromFile(String filename) {
+        System.out.println("-------------------------------------------------------------------------------");
+        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filename))) {
+            List<Product> loadedProducts = (List<Product>) inputStream.readObject();
+
+            if (loadedProducts != null) {
+                productList = (ArrayList<Product>) loadedProducts; // Update productList with the loaded products
+                System.out.println("Products loaded from file: " + filename);
+                return productList;
+            } else {
+                System.out.println("No products found in the file.");
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error loading products from file: " + e.getMessage());
+        }
+        return new ArrayList<>(); // Return an empty list in case of an error
+    }
+/*@Override: Indicates that this method overrides a method declared in an interface or superclass.
+
+public List<Product> loadProductsFromFile(String filename): Method signature that declares a method named loadProductsFromFile
+taking a String parameter filename and returning a List<Product>.
+
+try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filename))) {:
+Begins a try block for reading objects from a file. The try-with-resources statement is used here to
+ automatically close the ObjectInputStream when the block is exited.
+
+ObjectInputStream: Reads objects from an InputStream.
+new FileInputStream(filename): Creates a FileInputStream that reads from the specified file.
+List<Product> loadedProducts = (List<Product>) inputStream.readObject();:
+Reads the object (presumably a list of products) from the file using the ObjectInputStream. It is cast to List<Product>.
+
+if (loadedProducts != null) {: Checks if the loadedProducts is not null.
+
+productList = (ArrayList<Product>) loadedProducts;: If not null, updates the productList with the loaded products.
+The cast is used to convert from a general List<Product> to a more specific ArrayList<Product>.
+
+System.out.println("Products loaded from file: " + filename);:
+Prints a success message to the console.
+
+return productList;: Returns the updated productList.
+
+} else {: If loadedProducts is null, this block is executed.
+
+System.out.println("No products found in the file.");: Prints a message indicating that no products were found in the file.
+} catch (IOException | ClassNotFoundException e) {: Catches IOException and ClassNotFoundException, which can be thrown during file I/O and object deserialization.
+
+System.out.println("Error loading products from file: " + e.getMessage());:
+Prints an error message to the console, including details obtained from the exception's message using e.getMessage().
+
+} return new ArrayList<>();:
+This line is reached if an exception occurs or if no products are found in the file. It returns an empty ArrayList<Product>.*/
+
+
+
+    // Add this method to retrieve the loaded products
+    private List<Product> getLoadedProductsFromFile(String filename) {
+        List<Product> loadedProducts = new ArrayList<>();
+        System.out.println("-------------------------------------------------------------------------------");
+        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filename))) {
+            loadedProducts = (List<Product>) inputStream.readObject();
+            System.out.println("Products loaded from file: " + filename);
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error loading products from file: " + e.getMessage());
+        }
+
+        return loadedProducts;
+    }
+
+/*
+
+List<Product> loadedProducts = new ArrayList<>();: This line declares a new ArrayList<Product> named loadedProducts and initializes it.
+This list will be used to store the products loaded from the file.
+
+try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filename))) {: Begins a try block for reading objects from a file.
+The try-with-resources statement is used here to automatically close the ObjectInputStream when the block is exited.
+
+ObjectInputStream: Reads objects from an InputStream.
+new FileInputStream(filename): Creates a FileInputStream that reads from the specified file.
+
+loadedProducts = (List<Product>) inputStream.readObject();: Reads the object (presumably a list of products) from the file using the ObjectInputStream.
+It is cast to List<Product> and assigned to the loadedProducts variable.
+
+System.out.println("Products loaded from file: " + filename);:
+Prints a success message to the console indicating that products have been successfully loaded from the file.
+
+} catch (IOException | ClassNotFoundException e) {: Catches IOException and ClassNotFoundException,
+which can be thrown during file I/O and object deserialization.
+
+System.out.println("Error loading products from file: " + e.getMessage());: Prints an error message to the console,
+including details obtained from the exception's message using e.getMessage().
+
+} return loadedProducts;: This line is reached regardless of whether an exception occurred or the products were successfully loaded.
+It returns the loadedProducts list, which may contain the loaded products or be an empty list in case of an error.
+
+*/
+
+
+
+//Get all products existing in the file
+    @Override
+    public List<Product> getProductList() {
+        System.out.println("-------------------------------------------------------------------------------");
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the file name to load products from: ");
+        String filename = scanner.nextLine();
+
+        // Implement logic to fetch products (e.g., from a file)
+        return getLoadedProductsFromFile(filename);
+    }
+
+/*Scanner scanner = new Scanner(System.in);: Creates a new Scanner object to read input from the console.
+
+System.out.print("Enter the file name to load products from: ");: Prints a prompt to the console, asking the user to enter a file name.
+
+String filename = scanner.nextLine();: Reads a line of text entered by the user (presumably a file name) and stores it in the filename variable.
+
+return getLoadedProductsFromFile(filename);: Calls the getLoadedProductsFromFile method, passing the entered file name as an argument.
+This method is expected to load products from the specified file and return a List<Product>.
+
+The getLoadedProductsFromFile method is not shown in the provided code, but based on the context,
+it is likely to involve file I/O operations and deserialization to fetch the list of products from the specified file.
+
+The returned list is then returned by the getProductList method.
+
+In summary, this method prompts the user to enter a file name, calls a helper method (getLoadedProductsFromFile) to fetch products from the specified file,
+and returns the resulting list of products. The user input and file loading logic is encapsulated in this method.
+*/
+
+
+    public Product getSelectedProductDetails() {
+        // TODO: Implement the functionality to get selected product details
+        return null;
+    }
+
+
+
+
+
+
+    // Method to initialize the admin view
+    private void initializeAdminView() {
+        User loggedInUser = new User("username", "password");
+        ShoppingAppGUI shoppingAppGUI = new ShoppingAppGUI(loggedInUser, this);
+        shoppingAppGUI.setVisible(true);
+        System.out.println("Customer view loading....\n");
+        System.out.println("\n--------------------------------------- WELCOME TO WESTMINSTER SHOPPING CENTRE CUSTOMER VIEW LOADED! ---------------------------------------\n");
+        exit = true;
+    }
+
+/*User loggedInUser = new User("username", "password");: Creates a new User object representing the logged-in user.
+The username is set to "username" and the password to "password".
+This is a placeholder and may not represent real authentication.
+
+ShoppingAppGUI shoppingAppGUI = new ShoppingAppGUI(loggedInUser, this);:
+Creates an instance of the ShoppingAppGUI class, which seems to be a graphical user interface (GUI) for a shopping application.
+It takes the loggedInUser and this (referring to the current instance of the class) as parameters during instantiation.
+
+shoppingAppGUI.setVisible(true);: Sets the visibility of the ShoppingAppGUI to true,
+making it visible to the user.
+This line indicates that the GUI is being shown on the screen.
+
+exit = true;:
+Sets the exit variable to true.
+The purpose of this variable is not clear from this code snippet,
+but it seems to be a flag indicating that some kind of exit condition or action should be triggered.
+
+In summary, this method initializes an admin view by creating a user,
+instantiating a graphical user interface (ShoppingAppGUI), making it visible, printing messages to the console,
+and setting a variable (exit) to true.
+The actual functionality of the GUI and the role of the exit variable would require more context from the rest of the code.*/
+
+
+
+    // Main method for testing and running the shopping manager
+    public static void main(String[] args) {
+        WestminsterShoppingManager shoppingManager = new WestminsterShoppingManager();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("\n--------------------------------------- WELCOME TO WESTMINSTER SHOPPING CENTRE MAIN MENU! ---------------------------------------\n");
+        System.out.println("Are you an admin or a customer?");
+        System.out.println("1. Admin");
+        System.out.println("2. Customer");
+        System.out.print("Enter your choice: ");
+
+        int userType;
+        while (!scanner.hasNextInt()) {
+            System.out.println("Invalid input. Please enter a valid integer.\nEnter your choice: ");
+            scanner.nextLine(); // Consume invalid input
+        }
+        userType = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline
+
+        switch (userType) {
+            case 1 -> shoppingManager.runShoppingManager();
+            case 2 -> shoppingManager.initializeAdminView();
+            default -> System.out.println("Invalid choice. Exiting the program. Goodbye!");
+        }
+
+        scanner.close();
+    }
+
+
+
+
+
+
+    public void runShoppingManager() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                //PasswordValidationGUI passwordValidationGUI = new PasswordValidationGUI();
+                // passwordValidationGUI.setVisible(true);
+            }
+        });
+        System.out.println("\n--------------------------------------- WELCOME TO WESTMINSTER SHOPPING CENTRE ADMIN VIEW! ---------------------------------------\n");
+        Scanner scanner = new Scanner(System.in);
+
+        while (!exit) {
+            System.out.println("\n Enter products to the system");
+            System.out.println("1. Add a new product");
+            System.out.println("2. Delete a product");
+            System.out.println("3. Print the list of products");
+            System.out.println("4. Save products to file");
+            System.out.println("5. Load products from file");
+            System.out.println("6. Continue in Shopping cart customer view");
+            System.out.println("0. Exit");
+
+            System.out.print("\nEnter your choice: ");
+            if (scanner.hasNextInt()) {
+                int choice = scanner.nextInt();
+                scanner.nextLine(); // Consume the newline
+
+                switch (choice) {
+                    case 1 -> addProduct(scanner);
+                    case 2 -> deleteProduct(scanner);
+                    case 3 -> printProductList();
+                    case 4 -> saveProductsToFile(scanner);
+                    case 5 -> loadProductsFromFile(scanner);
+                    case 6 -> initializeAdminView();
+                    case 0 -> {
+                        System.out.println("Exiting the program. Goodbye!");
+                        exit = true;
+                    }
+                    default -> System.out.println("Invalid choice. Please enter a valid option.\nEnter your choice: ");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a valid integer.\nEnter your choice: ");
+                scanner.nextLine(); // Consume the invalid input
+            }
+        }
+
+        scanner.close();
+    }
+
+
+
+
+
+    // New method for adding a product with error validation
+    private void addProduct(Scanner scanner) {
+        System.out.println("\nEnter product details:");
+
+        int productType;
+
+        do {
+            System.out.println("\n  Choose product type:");
+            System.out.println("    1. Electronics");
+            System.out.println("    2. Clothing");
+            System.out.print("Enter your choice here: ");
+
+            while (!scanner.hasNextInt()) {
+                System.out.println("Invalid input for product type. Please enter a valid integer.\nEnter product type: ");
+                scanner.nextLine(); // Consume invalid input
+            }
+            productType = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline
+        } while (productType != 1 && productType != 2);
+
+        String productID;
+        String productName;
+        int availableItems;
+        double price;
+
+        do {
+            System.out.print("Product ID: ");
+            productID = scanner.nextLine();
+        } while (productID.isEmpty());
+
+        do {
+            System.out.print("Product Name: ");
+            productName = scanner.nextLine();
+        } while (productName.isEmpty());
+
+        do {
+            System.out.print("Available Items: ");
+            while (!scanner.hasNextInt()) {
+                System.out.println("Invalid input for available items. Please enter a valid integer.");
+                scanner.nextLine(); // Consume invalid input
+            }
+            availableItems = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline
+        } while (availableItems < 0);
+
+        do {
+            System.out.print("Price: ");
+            while (!scanner.hasNextDouble()) {
+                System.out.println("Invalid input for price. Please enter a valid number.\nEnter price: ");
+                scanner.nextLine(); // Consume invalid input
+            }
+            price = scanner.nextDouble();
+            scanner.nextLine(); // Consume the newline
+        } while (price < 0);
+
+        if (productType == 1) {
+            addElectronicsProduct(productID, productName, availableItems, price, scanner);
+        } else {
+            addClothingProduct(productID, productName, availableItems, price, scanner);
+        }
+        /*
+        This part of the code is a conditional statement (if-else) that checks the value of the variable productType.
+        The productType variable is obtained from user input,
+        where the user is prompted to choose between two product types: Electronics (1) or Clothing (2).
+
+If productType is equal to 1, it means the user chose Electronics.
+In this case, the code calls the method addElectronicsProduct with the relevant parameters:
+productID, productName, availableItems, price, and the Scanner object (scanner).
+This method presumably handles the specific logic for adding an electronics product to the inventory.
+
+If productType is not equal to 1 (which means it must be 2, as per the validation in the do-while loop), it means the user chose Clothing.
+In this case, the code calls the method addClothingProduct with the same set of parameters.
+This method likely contains the specific logic for adding a clothing product to the inventory.
+
+In essence, this part of the code uses the user's choice of product type to determine which specific method should be called to gather additional information related to that type of product.
+This approach is modular and follows the principle of separating concerns, making the code more organized and easier to understand and maintain.
+Each product type's logic is encapsulated in its respective method (addElectronicsProduct or addClothingProduct).
+
+
+*/
+        System.out.println("-------------------------------------------------------------------------------");
+    }
+
+
+
+
+
+    // Method for adding electronics product with error validation
+    private void addElectronicsProduct(String productID, String productName, int availableItems, double price, Scanner scanner) {
+        System.out.print("Brand: ");
+        String brand = scanner.nextLine();
+        System.out.print("Warranty Period: ");
+
+        if (scanner.hasNextInt()) {
+            String warrantyPeriod = scanner.next();
+            scanner.nextLine(); // Consume the newline
+            Electronics electronics = new Electronics(productID, productName, availableItems, price, brand, warrantyPeriod);
+            electronics.setProductTypeName("Electronics");
+            addProductToSystem(electronics);
+        } else {
+            System.out.println("Invalid input for warranty period. Please enter a valid integer.\nEnter warranty period: ");
+        }
+    }
+
+
+
+
+
+
+    // Method for adding clothing product with error validation
+    private void addClothingProduct(String productID, String productName, int availableItems, double price, Scanner scanner) {
+        System.out.print("Size: ");
+        String size = scanner.nextLine();
+        System.out.print("Color: ");
+        String color = scanner.nextLine();
+
+        Clothing clothing = new Clothing(productID, productName, availableItems, price, size, color);
+        clothing.setProductTypeName("Clothing");
+        addProductToSystem(clothing);
+    }
+
+    // New method for deleting a product with error validation
+    private void deleteProduct(Scanner scanner) {
+        System.out.println("-------------------------------------------------------------------------------");
+        System.out.print("\nEnter the product ID to delete: ");
+        String deleteProductID = scanner.nextLine();
+        deleteProductFromSystem(deleteProductID);
+    }
+
+    // New method for saving products to file with error validation
+    private void saveProductsToFile(Scanner scanner) {
+        System.out.println("-------------------------------------------------------------------------------");
+        System.out.print("Enter the file name to save: ");
+        String saveFileName = scanner.nextLine();
+        saveProductsToFile(saveFileName);
+        System.out.println("Products saved to file.");
+    }
+
+    // New method for loading products from file with error validation
+    private void loadProductsFromFile(Scanner scanner) {
+        System.out.println("-------------------------------------------------------------------------------");
+        System.out.print("\nEnter the file name to load: ");
+        String loadFileName = scanner.nextLine();
+        loadProductsFromFile(loadFileName);
+        System.out.println("Products loaded from file.");
+    }
+
+}
+  /*
+  * Other stuff to learn for viva
+  * In Java, access modifiers are used to specify the accessibility or scope of a field, method, constructor, or class.
+  There are four types of access modifiers in Java:
+
+1. private: The access level of a private modifier is only within the class.
+It cannot be accessed from outside the class.
+
+2. default: The access level of a default modifier is only within the package.
+It cannot be accessed from outside the package. If you do not specify any access level, it will be the default.
+
+3. protected: The access level of a protected modifier is within the package and outside the package through child class.
+If you do not make the child class, it cannot be accessed from outside the package.
+
+4. public: The access level of a public modifier is everywhere. It can be accessed from within the class, outside the class,
+within the package and outside the package.
+
+*/
